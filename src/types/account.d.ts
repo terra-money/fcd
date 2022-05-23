@@ -26,7 +26,7 @@ interface DelayedVestingAccount {
 }
 
 interface VestingPeriod {
-  length: string
+  length: string // unit: seconds
   amount: Coins
 }
 
@@ -34,6 +34,7 @@ interface PeriodicVestingAccount {
   '@type': '/cosmos.vesting.v1beta1.PeriodicVestingAccount'
   base_vesting_account: BaseVestingAccount
   start_time: string
+  // linear vesting from start_time to period.length (seconds)
   vesting_periods: VestingPeriod[]
 }
 

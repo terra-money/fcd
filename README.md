@@ -15,13 +15,8 @@
 
 ## Prerequisites
 
-1. `Node.js` version 14 or later
-1. `PostgreSQL` version 12 or later
-
-### Terra Core
-
-1. Setup a LCD
-1. Configure firewall ([Reference](https://docs.terra.money/How-to/Run-a-full-Terra-node/Set-up-production-environment.html#configure-the-firewall))
+1. `Node.js` v16.x or later
+1. `PostgreSQL` v12.x or later
 
 ## Project setup
 
@@ -79,7 +74,6 @@ module.exports = {
 | SENTRY_DSN          | Sentry DSN for error management (optional)                     |                                                                                        | API, Collector |
 | SERVER_PORT         | Listening port for API server                                  | 3060                                                                                   | API            |
 | FCD_URI             | FCD URI for Terra network                                      | https://bombay-fcd.terra.dev                                                           | API            |
-| STATION_STATUS_JSON | URL for Station version control                                | https://terra.money/station/version-web.json                                           | API            |
 | DISABLE_API         | Disable REST APIs                                              | false                                                                                  | API            |
 | EXCLUDED_ROUTES     | List of regular expression string for excluding routes         | []                                                                                     | API            |
 | MIN_GAS_PRICES      | Minimum gas price by denom object                              | {"uluna": "5.0"} | API            |

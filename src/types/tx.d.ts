@@ -17,13 +17,10 @@ declare namespace Transaction {
     }[]
   }
 
-  interface Message {
-    type: string
-    value: { [key: string]: any }
-  }
+  type Message = { [key: string]: any }
 
   interface Body {
-    messages: { [key: string]: any }[]
+    messages: Message[]
     memo: string
     timeout_height?: string
   }

@@ -24,7 +24,7 @@ function extractAddressFromMsg(msg: Transaction.Message): string[] {
     }
   }
 
-  extractAddressesFromValue(msg.value)
+  extractAddressesFromValue(msg)
   return addrs
 }
 
@@ -45,6 +45,7 @@ function extractAddressFromLog(log: Transaction.Log) {
 export function generateAccountTxs(tx: TxEntity): AccountTxEntity[] {
   const msgs = tx.data.tx.body.messages
   const logs = tx.data.logs
+
   const addrs = msgs.map(extractAddressFromMsg).flat()
 
   if (logs) {
