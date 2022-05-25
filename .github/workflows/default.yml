@@ -63,6 +63,6 @@ jobs:
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/fcd:${{ github.sha }}
             ${{ steps.login-ecr.outputs.registry }}/fcd:latest
-            #terramoney/fcd:latest
+          # terramoney/fcd:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
