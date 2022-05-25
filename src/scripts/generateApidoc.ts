@@ -7,8 +7,6 @@ import config from 'config'
 
 import { apiLogger as logger } from 'lib/logger'
 
-import { isRouteExcluded } from './mergeSwaggerFile'
-
 const templateDir = './apidoc-template/'
 const templateName = 'index.html'
 
@@ -39,13 +37,7 @@ type ApiDoc = {
   project: string
 }
 
-function filterExcludeRoutes(urls: UrlItem[]) {
-  return urls.filter((url: UrlItem) => {
-    return !isRouteExcluded(url.url)
-  })
-}
-
-(async function generateApiDoc() {
+;(async function generateApiDoc() {
   const argv = await yargs.options({
     o: {
       type: 'string',
@@ -64,8 +56,6 @@ function filterExcludeRoutes(urls: UrlItem[]) {
   if (!existsSync(dest)) {
     mkdirSync(dest)
   }
-
-  parsedDoc.data = JSON.stringify(filterExcludeRoutes(JSON.parse(parsedDoc.data) as UrlItem[]))
 
   const template = path.join(__dirname, '..', '..', templateDir, templateName)
   const outputFile = path.join(dest, templateName)
