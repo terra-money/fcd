@@ -1,6 +1,6 @@
 {
   "name": "fcd",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "Terra FCD Suite",
   "main": "index.js",
   "author": "Terra Engineering <engineering@terra.money>",
@@ -22,8 +22,6 @@
     "collector": "better-npm-run collector-prod",
     "do": "ts-node -T --files -r tsconfig-paths/register",
     "typeorm": "npm run do ./node_modules/.bin/typeorm",
-    "swagger": "npm run do src/scripts/generateSwagger.ts",
-    "mergeswagger": "npm run do src/scripts/mergeSwaggerFile.ts -- -o swagger.json",
     "apidoc": "npm run do src/scripts/generateApidoc.ts",
     "prepare": "husky install"
   },
@@ -53,7 +51,6 @@
     "@terra-money/terra.js": "^3.0.12",
     "@terra-money/terra.proto": "^0.1.7",
     "apidoc-core": "^0.11.1",
-    "apidoc-swagger": "file:apidoc-swagger-0.2.6-terra.tgz",
     "bech32": "^2.0.0",
     "better-npm-run": "^0.1.1",
     "bignumber.js": "^9.0.1",
@@ -72,7 +69,6 @@
     "koa-mount": "^4.0.0",
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
-    "koa2-swagger-ui": "^5.0.5",
     "lodash": "^4.17.20",
     "memoizee": "^0.4.14",
     "node-cron": "^3.0.0",

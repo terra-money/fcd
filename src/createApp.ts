@@ -51,24 +51,6 @@ function createApiDocApp(): Koa {
   return app
 }
 
-function createSwaggerApp(): Koa {
-  // swagger ui
-  const app = new Koa()
-
-  app
-    .use(
-      koaSwagger({
-        routePrefix: '/',
-        swaggerOptions: {
-          url: '/static/swagger.json'
-        }
-      })
-    )
-    .use(notFoundMiddleware)
-
-  return app
-}
-
 async function createAPIApp(): Promise<Koa> {
   const app = new Koa()
 
@@ -116,7 +98,6 @@ export default async (disableAPI = false): Promise<Koa> => {
   app.proxy = true
 
   const apiDocApp = createApiDocApp()
-  const swaggerApp = createSwaggerApp()
   const apiApp = await createAPIApp()
 
   app
@@ -140,7 +121,6 @@ export default async (disableAPI = false): Promise<Koa> => {
     .use(cors())
     .use(mount('/static', apiDocApp))
     .use(mount('/apidoc', apiDocApp))
-    .use(mount('/swagger', swaggerApp))
     .use(mount(API_VERSION_PREFIX, apiApp))
 
   return app

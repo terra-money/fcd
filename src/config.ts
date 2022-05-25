@@ -13,26 +13,16 @@ const {
   TOKEN_NETWORK
 } = process.env
 
-const CHAIN_ID = process.env.CHAIN_ID || 'bombay-12'
-let INITIAL_HEIGHT = parseInt(process.env.INITIAL_HEIGHT || '')
-
-if (isNaN(INITIAL_HEIGHT) || INITIAL_HEIGHT <= 0) {
-  if (CHAIN_ID === 'columbus-5') {
-    INITIAL_HEIGHT = 4724001
-  } else if (CHAIN_ID === 'bombay-12') {
-    INITIAL_HEIGHT = 5900001
-  } else {
-    INITIAL_HEIGHT = 1
-  }
-}
+const CHAIN_ID = process.env.CHAIN_ID || 'pisco-1'
+const INITIAL_HEIGHT = parseInt(process.env.INITIAL_HEIGHT || '1')
 
 const config = {
   ORM: 'default',
   CHAIN_ID,
   INITIAL_HEIGHT,
   SERVER_PORT: SERVER_PORT ? +SERVER_PORT : 3060,
-  LCD_URI: LCD_URI || 'https://bombay-lcd.terra.dev',
-  FCD_URI: FCD_URI || 'https://bombay-fcd.terra.dev',
+  LCD_URI: LCD_URI || 'https://pisco-lcd.terra.dev',
+  FCD_URI: FCD_URI || 'https://pisco-fcd.terra.dev',
   RPC_URI: RPC_URI || 'http://localhost:26657',
   BANK_WALLETS: BANK_WALLETS ? (JSON.parse(BANK_WALLETS) as string[]) : [],
   TOKEN_NETWORK: TOKEN_NETWORK,
