@@ -18,7 +18,6 @@ jobs:
 
   #     - name: Audit
   #       run: npm audit
-
   delivery:
     runs-on: ubuntu-latest
     needs: integration
