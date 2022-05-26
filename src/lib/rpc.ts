@@ -3,7 +3,11 @@ import { compact } from 'lodash'
 import config from 'config'
 import { apiLogger as logger } from './logger'
 
-const agent = new Agent()
+const agent = new Agent({
+  connect: {
+    rejectUnauthorized: false
+  }
+})
 
 async function getRequest(path: string, params?: Record<string, string>): Promise<any> {
   const options = {
@@ -15,14 +19,14 @@ async function getRequest(path: string, params?: Record<string, string>): Promis
   }
 
   let url = `${config.RPC_URI}${path}`
-  params && Object.keys(params).forEach(key => params[key] === undefined && delete params[key])
+  params && Object.keys(params).forEach((key) => params[key] === undefined && delete params[key])
   const qs = new URLSearchParams(params as any).toString()
   if (qs.length) {
     url += `?${qs}`
   }
 
   const response = await request(url, options)
-    .then(res => {
+    .then((res) => {
       if (res.statusCode !== 200) {
         throw new Error('invalid status')
       }
