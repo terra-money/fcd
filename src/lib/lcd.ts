@@ -1,9 +1,12 @@
 import { request, Agent } from 'undici'
 import config from 'config'
-import { plus, times, div } from 'lib/math'
 import { ErrorTypes, APIError } from './error'
 
-const agent = new Agent()
+const agent = new Agent({
+  connect: {
+    rejectUnauthorized: false
+  }
+})
 
 const NOT_FOUND_REGEX = /(?:not found|no del|not ex|failed to find|unknown prop|empty bytes|No price reg)/i
 
