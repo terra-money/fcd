@@ -38,8 +38,6 @@ export async function getValidatorOperatorAddressByConsensusAddress(b64: string,
   })
 
   if (!validatorCache.has(b64)) {
-    // Clear and retry
-    validatorCache.clear()
     throw new Error(`cannot find ${b64} address at height ${height}`)
   }
 

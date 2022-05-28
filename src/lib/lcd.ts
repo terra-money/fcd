@@ -202,20 +202,21 @@ export async function getUnbondingDelegations(address: string): Promise<LcdStaki
 }
 
 export async function getValidators(status?: LcdValidatorStatus, strHeight?: string): Promise<LcdValidator[]> {
+  const height = calculateHeightParam(strHeight)
+
   if (status) {
-    return (await get(`/cosmos/staking/v1beta1/validators`, { status })).validators
-  } else {
-    const height = calculateHeightParam(strHeight)
-    const url = `/cosmos/staking/v1beta1/validators`
-
-    const [bonded, unbonded, unbonding] = await Promise.all([
-      get(url, { status: 'BOND_STATUS_BONDED', height }),
-      get(url, { status: 'BOND_STATUS_UNBONDING', height }),
-      get(url, { status: 'BOND_STATUS_UNBONDED', height })
-    ])
-
-    return [bonded.validators, unbonded.validators, unbonding.validators].flat()
+    return (await get(`/cosmos/staking/v1beta1/validators`, { status, height, 'pagination.limit': 200 })).validators
   }
+
+  const url = `/cosmos/staking/v1beta1/validators`
+
+  const [bonded, unbonded, unbonding] = await Promise.all([
+    get(url, { status: 'BOND_STATUS_BONDED', height, 'pagination.limit': 200 }),
+    get(url, { status: 'BOND_STATUS_UNBONDING', height }),
+    get(url, { status: 'BOND_STATUS_UNBONDED', height })
+  ])
+
+  return [bonded.validators, unbonded.validators, unbonding.validators].flat()
 }
 
 export async function getValidator(operatorAddr: string): Promise<LcdValidator | undefined> {
