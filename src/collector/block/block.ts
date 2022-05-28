@@ -2,6 +2,7 @@ import * as sentry from '@sentry/node'
 import { getMinutes } from 'date-fns'
 import { getRepository, getManager, DeepPartial, EntityManager } from 'typeorm'
 import * as Bluebird from 'bluebird'
+import { bech32 } from 'bech32'
 
 import config from 'config'
 import { BlockEntity, BlockRewardEntity } from 'orm'
@@ -19,8 +20,8 @@ import { collectGeneral } from './general'
 
 const validatorCache = new Map()
 
-export async function getValidatorOperatorAddressByHexAddress(hexAddress: string, height: string) {
-  const operatorAddress = validatorCache.get(hexAddress)
+export async function getValidatorOperatorAddressByConsensusAddress(b64: string, height: string) {
+  const operatorAddress = validatorCache.get(b64)
 
   if (operatorAddress) {
     return operatorAddress
@@ -30,19 +31,19 @@ export async function getValidatorOperatorAddressByHexAddress(hexAddress: string
 
   valsAndCons.forEach((v) => {
     if (v.lcdConsensus && v.lcdConsensus.address) {
-      const h = convertAddressToHex(v.lcdConsensus.address).toUpperCase()
-      validatorCache.set(h, v.lcdValidator.operator_address)
+      const b64i = Buffer.from(bech32.fromWords(bech32.decode(v.lcdConsensus.address).words)).toString('base64')
+
+      validatorCache.set(b64i, v.lcdValidator.operator_address)
     }
   })
 
-  if (!validatorCache.has(hexAddress)) {
-    // TODO: Need to figure out solution when a block was proposed by inactive validators
-    // when collecting old blocks
-    // throw new Error(`could not find validator by ${hexAddress} at height ${height}`)
-    return validatorCache.values().next().value
+  if (!validatorCache.has(b64)) {
+    // Clear and retry
+    validatorCache.clear()
+    throw new Error(`cannot find ${b64} address at height ${height}`)
   }
 
-  return validatorCache.get(hexAddress)
+  return validatorCache.get(b64)
 }
 
 async function getLatestIndexedBlock(): Promise<BlockEntity | undefined> {
@@ -74,7 +75,7 @@ async function generateBlockEntity(
     height: +height,
     timestamp: new Date(timestamp),
     reward: blockReward,
-    proposer: await getValidatorOperatorAddressByHexAddress(proposer_address, height)
+    proposer: await getValidatorOperatorAddressByConsensusAddress(proposer_address, height)
   }
 
   return blockEntity

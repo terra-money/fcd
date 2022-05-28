@@ -99,7 +99,7 @@ export async function getValidatorConsensus(strHeight?: string): Promise<LcdVali
   }: {
     validators: LcdValidatorConsensus[]
     pagination: Pagination
-  } = await get(`/cosmos/base/tendermint/v1beta1/validatorsets/${height || 'latest'}`, { height })
+  } = await get(`/cosmos/base/tendermint/v1beta1/validatorsets/${height || 'latest'}`)
 
   const result = [validators]
   let total = parseInt(pagination.total) - 100
@@ -111,8 +111,7 @@ export async function getValidatorConsensus(strHeight?: string): Promise<LcdVali
     }: {
       validators: LcdValidatorConsensus[]
     } = await get(`/cosmos/base/tendermint/v1beta1/validatorsets/${height || 'latest'}`, {
-      'pagination.offset': offset,
-      height
+      'pagination.offset': offset
     })
 
     result.push(validators)
