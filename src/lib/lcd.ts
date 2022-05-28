@@ -95,30 +95,29 @@ export async function getValidatorConsensus(strHeight?: string): Promise<LcdVali
   const height = calculateHeightParam(strHeight)
   const {
     validators,
-    total
+    pagination
   }: {
     validators: LcdValidatorConsensus[]
-    total: string
+    pagination: Pagination
   } = await get(`/cosmos/base/tendermint/v1beta1/validatorsets/${height || 'latest'}`, { height })
 
   const result = [validators]
-  let remaining = parseInt(total) - 100
-  let page = 2
+  let total = parseInt(pagination.total) - 100
+  let offset = 100
 
-  while (remaining > 0) {
+  while (total > 0) {
     const {
       validators
     }: {
       validators: LcdValidatorConsensus[]
-      total: string
     } = await get(`/cosmos/base/tendermint/v1beta1/validatorsets/${height || 'latest'}`, {
-      page: page.toString(),
+      'pagination.offset': offset,
       height
     })
 
     result.push(validators)
-    page += 1
-    remaining -= 100
+    offset += 100
+    total -= 100
   }
 
   return result.flat()
