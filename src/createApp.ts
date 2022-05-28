@@ -8,7 +8,6 @@ import * as helmet from 'koa-helmet'
 import * as serve from 'koa-static'
 import * as mount from 'koa-mount'
 import { configureRoutes } from 'koa-joi-controllers'
-import { koaSwagger } from 'koa2-swagger-ui'
 
 import config from 'config'
 import { errorHandler, APIError, ErrorTypes } from 'lib/error'
