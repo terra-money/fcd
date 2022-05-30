@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm'
 import { BlockEntity } from 'orm'
 import { omit } from 'lodash'
 import { getValidator } from 'lib/lcd'
+import { APIError, ErrorTypes } from 'lib/error'
 
 type GetBlockResponse =
   | (Pick<BlockEntity, 'chainId' | 'height' | 'timestamp'> & {
@@ -26,7 +27,7 @@ export async function getBlock(height: number): Promise<GetBlockResponse> {
   const block = await qb.getOne()
 
   if (!block) {
-    return null
+    throw new APIError(ErrorTypes.NOT_FOUND_ERROR)
   }
 
   const val = await getValidator(block.proposer)
