@@ -1,7 +1,7 @@
 import { KoaController, Validate, Get, Controller, Validator, Post } from 'koa-joi-controllers'
 import config from 'config'
-import { success, error } from 'lib/response'
-import { ErrorCodes, ErrorTypes } from 'lib/error'
+import { success } from 'lib/response'
+import { ErrorCodes } from 'lib/error'
 import { TERRA_ACCOUNT_REGEX, CHAIN_ID_REGEX } from 'lib/constant'
 import Mempool from 'lib/mempool'
 import { getBlock, getTx, getTxList } from 'service/transaction'
@@ -17,11 +17,7 @@ export default class TransactionController extends KoaController {
     }
   })
   async getBlock(ctx): Promise<void> {
-    const block = await getBlock(ctx.params.height)
-    if (block) {
-      success(ctx, block)
-    }
-    error(ctx, ErrorTypes.NOT_FOUND_ERROR)
+    success(ctx, await getBlock(ctx.params.height))
   }
 
   /**
