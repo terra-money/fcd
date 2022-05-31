@@ -21,7 +21,7 @@ async function get(path: string, params?: Record<string, unknown>): Promise<any>
 
   let url = `${config.LCD_URI}${path}`
   params && Object.keys(params).forEach((key) => params[key] === undefined && delete params[key])
-  const qs = new URLSearchParams(params as any).toString()
+  const qs = new URLSearchParams({ ...(params as any), 'pagination.limit': 32768 }).toString()
   if (qs.length) {
     url += `?${qs}`
   }
