@@ -2,6 +2,7 @@ import { subDays, endOfDay } from 'date-fns'
 import { getConnection } from 'typeorm'
 
 import { getQueryDateTime, getDateFromDateTime } from 'lib/time'
+import config from 'config'
 import { getLatestDateOfAccountTx } from './helpers'
 
 export interface DailyAccountStat {
@@ -18,11 +19,14 @@ async function getTotalAccount(until: Date): Promise<{
   const rawQuery = `SELECT COUNT(*) AS total_account_count FROM (${subQuery}) AS t;`
 
   const result: {
-    total_account_count: number
+    total_account_count: string
   }[] = await getConnection().query(rawQuery)
+
   return {
     date: getDateFromDateTime(until),
-    total_account_count: result.length ? result[0].total_account_count : 0
+    total_account_count: result.length
+      ? +result[0].total_account_count + config.GENESIS_ACCOUNT_COUNT
+      : config.GENESIS_ACCOUNT_COUNT
   }
 }
 
