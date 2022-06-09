@@ -10,7 +10,8 @@ const {
   MIN_GAS_PRICES,
   PRUNING_KEEP_EVERY,
   BANK_WALLETS,
-  TOKEN_NETWORK
+  TOKEN_NETWORK,
+  GENESIS_ACCOUNT_COUNT
 } = process.env
 
 const CHAIN_ID = process.env.CHAIN_ID || 'pisco-1'
@@ -36,7 +37,8 @@ const config = {
     : ({
         uluna: '5.0'
       } as DenomMap),
-  PRUNING_KEEP_EVERY: parseInt(PRUNING_KEEP_EVERY || '100', 10) || 100
+  PRUNING_KEEP_EVERY: parseInt(PRUNING_KEEP_EVERY || '100', 10) || 100,
+  GENESIS_ACCOUNT_COUNT: parseInt(GENESIS_ACCOUNT_COUNT || '0', 10) || 0
 }
 
 export default config
