@@ -50,7 +50,7 @@
     "@sentry/node": "^6.1.0",
     "@terra-money/terra.js": "^3.0.12",
     "@terra-money/terra.proto": "^0.1.7",
-    "apidoc-core": "^0.11.1",
+    "apidoc-core": "^0.15.0",
     "bech32": "^2.0.0",
     "better-npm-run": "^0.1.1",
     "bignumber.js": "^9.0.1",
