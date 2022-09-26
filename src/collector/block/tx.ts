@@ -9,10 +9,21 @@ import { collectorLogger as logger } from 'lib/logger'
 import { generateAccountTxs } from './accountTx'
 
 export async function generateTxEntity(tx: Transaction.LcdTransaction, block: BlockEntity): Promise<TxEntity> {
+  
+  try {
+    // Replace unicode \u0000 (null) postgres cannot translate to char
+    const txStr = JSON.stringify(tx)
+    modifiedDoc = JSON.parse(txStr.replace(/\\\\\\\\u0000|\\\\u0000|\\u0000/g, ''))
+    modifiedDoc = syncMsgType(modifiedDoc) as Transaction.LcdTransaction
+  } catch (err) {
+    logger.error(err)
+    throw err
+  }
+    
   const txEntity = new TxEntity()
   txEntity.chainId = block.chainId
   txEntity.hash = tx.txhash.toUpperCase()
-  txEntity.data = tx
+  txEntity.data = modifiedDoc
   txEntity.timestamp = new Date(tx.timestamp)
   txEntity.block = block
   return txEntity
