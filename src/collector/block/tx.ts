@@ -9,10 +9,13 @@ import { collectorLogger as logger } from 'lib/logger'
 import { generateAccountTxs } from './accountTx'
 
 export async function generateTxEntity(tx: Transaction.LcdTransaction, block: BlockEntity): Promise<TxEntity> {
+  const stringTx = JSON.stringify(tx)
+  const sanitixedTx: Transaction.LcdTransaction = JSON.parse(stringTx.replace(/\\\\\\\\u0000|\\\\u0000|\\u0000/g, ''))
+
   const txEntity = new TxEntity()
   txEntity.chainId = block.chainId
   txEntity.hash = tx.txhash.toUpperCase()
-  txEntity.data = tx
+  txEntity.data = sanitixedTx
   txEntity.timestamp = new Date(tx.timestamp)
   txEntity.block = block
   return txEntity
