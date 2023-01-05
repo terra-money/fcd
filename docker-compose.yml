@@ -21,7 +21,7 @@ services:
      #image: terrarebels/terraclassic.indexer-collector:latest-rebel-1
      command: coldev
      environment:
-       - "INDEXER_CHAINID=columbus-5"
+       - "INDEXER_CHAIN_ID=columbus-5"
        - "INDEXER_INITIAL_HEIGHT=4724001"
        - "INDEXER_LCD_URI=https://columbus-lcd.terra.dev"
        - "INDEXER_RPC_URI=http://public-node.terra.dev:26657"
@@ -38,7 +38,7 @@ services:
      #image: terrarebels/terraclassic.indexer-api:latest-rebel-1
      command: dev
      environment:
-       - "INDEXER_CHAINID=columbus-5"
+       - "INDEXER_CHAIN_ID=columbus-5"
        - "INDEXER_INITIAL_HEIGHT=4724001"
        - "INDEXER_LCD_URI=https://columbus-lcd.terra.dev"
        - "INDEXER_RPC_URI=http://public-node.terra.dev:26657"
