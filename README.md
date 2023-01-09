@@ -39,7 +39,7 @@ FCD requires PostgreSQL as a backend database and [TypeORM](https://github.com/t
 #### Create a new database for FCD
 
 ```psql
-postgres=> CREATE DATABASED fcd OWNER terra;
+postgres=> CREATE DATABASE terra_fcd OWNER terra;
 ```
 
 #### Synchronize Database Scheme
@@ -53,7 +53,7 @@ module.exports = {
   name: 'default',
   type: 'postgres',
   host: 'localhost',
-  database: 'fcd',
+  database: 'terra_fcd',
   username: 'terra',
   password: '<password>',
   synchronize: true
@@ -64,20 +64,20 @@ module.exports = {
 
 ### 4. Configure Environment Variables
 
-| Name                | Description                                                    | Default                                                                                | Module(s)      |
-| ------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------- |
-| CHAIN_ID            | Chain ID of Terra network                                      | bombay-12                                                                              | API, Collector |
-| INITIAL_HEIGHT      | The initial height of network. (Define 4724001 for Columbus-5) |                                                                                        | Collector      |
-| LCD_URI             | LCD URI for Terra network                                      | https://bombay-lcd.terra.dev                                                           | API, Collector |
-| RPC_URI             | RPC URI for Terra network                                      | _required:_ http://x.x.x.x:26657                                                       | API, Collector |
-| USE_LOG_FILE        | Write logs to logs directory                                   | false                                                                                  | API, Collector |
-| SENTRY_DSN          | Sentry DSN for error management (optional)                     |                                                                                        | API, Collector |
-| SERVER_PORT         | Listening port for API server                                  | 3060                                                                                   | API            |
-| FCD_URI             | FCD URI for Terra network                                      | https://bombay-fcd.terra.dev                                                           | API            |
-| DISABLE_API         | Disable REST APIs                                              | false                                                                                  | API            |
-| EXCLUDED_ROUTES     | List of regular expression string for excluding routes         | []                                                                                     | API            |
-| MIN_GAS_PRICES      | Minimum gas price by denom object                              | {"uluna": "5.0"} | API            |
-| TOKEN_NETWORK       | Network specifier for whitelisted tokens                       | _required:_ mainnet / testnet                                                          | API            |
+| Name                    | Description                                | Default                          | Module(s)      | Required |
+| ----------------------- | -------------------------------------------| -------------------------------- | -------------- | -------- |
+| INDEXER_CHAIN_ID        | Chain ID of Terra network.                 | columbus-5                       | API, Collector | Yes      |
+| INDEXER_INITIAL_HEIGHT  | The initial height of network.             | 4724001 (if columbus-5)          | Collector      | Yes      |
+| INDEXER_LCD_URI         | LCD URI for Terra network.                 | https://columbus-lcd.terra.dev   | API, Collector | Yes      |
+| INDEXER_RPC_URI         | RPC URI for Terra network.                 | http://localhost:26657           | API, Collector | Yes      |
+| INDEXER_USE_LOG_FILE    | Write logs to logs directory.              | false                            | API, Collector | Yes      |
+| INDEXER_SENTRY_DSN      | Sentry DSN for error management.           | ""                               | API, Collector | No       |
+| INDEXER_SERVER_PORT     | Listening port for API server.             | 3060                             | API            | Yes      | 
+| INDEXER_FCD_URI         | FCD URI for Terra network.                 | https://columbus-fcd.terra.dev   | API            | Yes      |
+| INDEXER_DISABLE_API     | Disable REST APIs.                         | false                            | API            | Yes      |
+| INDEXER_EXCLUDED_ROUTES | List of regex strings for excluding routes | []                               | API            | No       | 
+| INDEXER_MIN_GAS_PRICES  | Minimum gas price by denom object          | {"uluna": "5.0"}                 | API            | Yes      |
+| INDEXER_TOKEN_NETWORK   | Network specifier for whitelisted tokens   | mainnet / testnet                | API            | Yes      |
 
 > In Terra, we use [direnv](https://direnv.net) for managing environment variable for development. See [sample of .envrc](.envrc_sample)
 
