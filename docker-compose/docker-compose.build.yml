@@ -11,7 +11,7 @@ services:
    indexer-collector:     
      image: terraclassic.indexer-collector
      build: 
-      context: .
+      context: ../
       dockerfile: Dockerfile.terraclassic.indexer-collector
       args:
         base_image: terraclassic.indexer
@@ -20,7 +20,7 @@ services:
    indexer-api:
      image: terraclassic.indexer-api
      build: 
-       context: .
+       context: ../
        dockerfile: Dockerfile.terraclassic.indexer-api
        args:
          base_image: terraclassic.indexer
