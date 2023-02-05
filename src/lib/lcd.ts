@@ -1,6 +1,7 @@
 import { request, Agent } from 'undici'
 import config from 'config'
 import { ErrorTypes, APIError } from './error'
+import { loggers } from 'winston'
 
 const agent = new Agent({
   connect: {
@@ -8,27 +9,33 @@ const agent = new Agent({
   }
 })
 
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+    'User-Agent': 'terra-fcd'
+  },
+  dispatcher: agent
+}
+
 const NOT_FOUND_REGEX = /(?:not found|no del|not ex|failed to find|unknown prop|empty bytes|No price reg)/i
 
-async function get(path: string, params?: Record<string, unknown>): Promise<any> {
-  const options = {
-    headers: {
-      'Content-Type': 'application/json',
-      'User-Agent': 'terra-fcd'
-    },
-    dispatcher: agent
-  }
-
+async function getUrl(path: string, params?: Record<string, unknown>): Promise<any> {
   let url = `${config.LCD_URI}${path}`
   params && Object.keys(params).forEach((key) => params[key] === undefined && delete params[key])
   const qs = new URLSearchParams(params as any).toString()
   if (qs.length) {
     url += `?${qs}`
   }
+  return url
+}
 
+async function get(path: string, params?: Record<string, unknown>): Promise<any> {
+  const url = await getUrl(path, params)
   const res = await request(url, options).then(async (res) => {
     const json = await res.body.json()
 
+    // This is a pretty awful way to process return codes, but maintaining this existing
+    // logic to avoid breaking working code that depends on it
     if (res.statusCode === 404 && json.message && NOT_FOUND_REGEX.test(json.message)) {
       return undefined
     }
@@ -79,7 +86,35 @@ function calculateHeightParam(strHeight?: string): string | undefined {
 // Transactions
 ///////////////////////////////////////////////
 export async function getTx(hash: string): Promise<Transaction.LcdTransaction> {
-  const res = await get(`/cosmos/tx/v1beta1/txs/${hash}`)
+  const url = await getUrl(`/cosmos/tx/v1beta1/txs/${hash}`)
+  const res = await request(url, options).then(async (res) => {
+    const json = await res.body.json()
+
+    if (res.statusCode === 404 && json.message && NOT_FOUND_REGEX.test(json.message)) {
+      return {
+        tx_response: {
+          txhash: hash,
+          timestamp: Date.now(),
+          raw_log: json.message,
+          tx: {
+            body: {
+              messages: []
+            }
+          }
+        }
+      }
+    }
+
+    if (res.statusCode === 400) {
+      throw new APIError(ErrorTypes.INVALID_REQUEST_ERROR, undefined, url)
+    }
+
+    if (res.statusCode !== 200) {
+      throw new APIError(ErrorTypes.LCD_ERROR, `${res.statusCode}`, `${url} ${json.message}`, json)
+    }
+
+    return json
+  })
 
   if (!res || !res.tx_response) {
     throw new APIError(ErrorTypes.NOT_FOUND_ERROR, '', `transaction not found on node (hash: ${hash})`)
