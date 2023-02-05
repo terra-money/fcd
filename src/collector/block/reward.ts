@@ -65,9 +65,6 @@ export async function getRewards(timestamp: number): Promise<Rewards> {
   const rewardMerger = (obj, src) => mergeWith(obj, src, (o, s) => plus(o, s))
 
   return blocks.reduce((acc, block) => {
-    console.log(acc)
-    console.log(block)
-
     if (block.reward) {
       const reward = block.reward.reward
       const commission = block.reward.commission
