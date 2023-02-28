@@ -18,20 +18,26 @@ export async function generateTxEntity(tx: Transaction.LcdTransaction, block: Bl
   return txEntity
 }
 
-const iterate = (obj) => {
-  Object.keys(obj).forEach((key) => {
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
-      iterate(obj[key])
-    } else {
-      console.log(`key: ${key}, value: ${obj[key]}`)
-    }
-  })
-}
-
 async function sanitizeTx(tx: Transaction.LcdTransaction): Promise<Transaction.LcdTransaction> {
+  function hasUnicode(s) {
+    // eslint-disable-next-line no-control-regex
+    return /[^\u0000-\u007f]/.test(s)
+  }
+
+  const iterateTx = (obj) => {
+    Object.keys(obj).forEach((key) => {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        iterateTx(obj[key])
+      } else {
+        if (hasUnicode(obj[key])) {
+          console.log(`key: ${key}, value: ${obj[key]}`)
+        }
+      }
+    })
+  }
   //const stringTx = JSON.stringify(tx)
   //const sanitixedTx: Transaction.LcdTransaction = JSON.parse(stringTx.replace(/\\\\\\\\u0000|\\\\u0000|\\u0000/g, ''))
-  iterate(tx)
+  iterateTx(tx)
   return tx
 }
 
