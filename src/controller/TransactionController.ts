@@ -20,6 +20,11 @@ export default class TransactionController extends KoaController {
     success(ctx, await getBlock(ctx.params.height))
   }
 
+  @Get('/blocks/latest')
+  async getBlockLatest(ctx): Promise<void> {
+    success(ctx, await getBlock(0))
+  }
+
   /**
    * @api {get} /tx/:txhash Get Tx
    * @apiName getTx
