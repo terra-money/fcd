@@ -10,6 +10,11 @@ const Joi = Validator.Joi
 
 @Controller('')
 export default class TransactionController extends KoaController {
+  @Get('/blocks/latest')
+  async getBlockLatest(ctx): Promise<void> {
+    success(ctx, await getBlock(0))
+  }
+
   @Get('/blocks/:height')
   @Validate({
     params: {
@@ -18,11 +23,6 @@ export default class TransactionController extends KoaController {
   })
   async getBlock(ctx): Promise<void> {
     success(ctx, await getBlock(ctx.params.height))
-  }
-
-  @Get('/blocks/latest')
-  async getBlockLatest(ctx): Promise<void> {
-    success(ctx, await getBlock(0))
   }
 
   /**
