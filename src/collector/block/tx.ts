@@ -9,16 +9,30 @@ import { collectorLogger as logger } from 'lib/logger'
 import { generateAccountTxs } from './accountTx'
 
 export async function generateTxEntity(tx: Transaction.LcdTransaction, block: BlockEntity): Promise<TxEntity> {
-  const stringTx = JSON.stringify(tx)
-  const sanitixedTx: Transaction.LcdTransaction = JSON.parse(stringTx.replace(/\\\\\\\\u0000|\\\\u0000|\\u0000/g, ''))
-
   const txEntity = new TxEntity()
   txEntity.chainId = block.chainId
   txEntity.hash = tx.txhash.toUpperCase()
-  txEntity.data = sanitixedTx
+  txEntity.data = await sanitizeTx(tx)
   txEntity.timestamp = new Date(tx.timestamp)
   txEntity.block = block
   return txEntity
+}
+
+const iterate = (obj) => {
+  Object.keys(obj).forEach((key) => {
+    console.log(`key: ${key}, value: ${obj[key]}`)
+
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      iterate(obj[key])
+    }
+  })
+}
+
+async function sanitizeTx(tx: Transaction.LcdTransaction): Promise<Transaction.LcdTransaction> {
+  //const stringTx = JSON.stringify(tx)
+  //const sanitixedTx: Transaction.LcdTransaction = JSON.parse(stringTx.replace(/\\\\\\\\u0000|\\\\u0000|\\u0000/g, ''))
+  iterate(tx)
+  return tx
 }
 
 async function generateTxEntities(txHashes: string[], block: BlockEntity): Promise<TxEntity[]> {
