@@ -30,6 +30,8 @@ async function sanitizeTx(tx: Transaction.LcdTransaction): Promise<Transaction.L
         iterateTx(obj[key])
       } else {
         if (hasUnicode(obj[key])) {
+          const b = Buffer.from(obj[key])
+          obj[key] = b.toString('base64')
           console.log(`key: ${key}, value: ${obj[key]}`)
         }
       }
