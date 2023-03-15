@@ -50,7 +50,6 @@ class Mempool {
 
     watcher.registerSubscriber(`tm.event='NewBlock'`, async (data) => {
       const marshalTxs = data.result.data?.value.block?.data.txs as string[]
-
       if (marshalTxs) {
         marshalTxs.map((strTx) => {
           const txhash = getTxHash(strTx)
