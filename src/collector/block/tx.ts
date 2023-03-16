@@ -9,16 +9,41 @@ import { collectorLogger as logger } from 'lib/logger'
 import { generateAccountTxs } from './accountTx'
 
 export async function generateTxEntity(tx: Transaction.LcdTransaction, block: BlockEntity): Promise<TxEntity> {
-  const stringTx = JSON.stringify(tx)
-  const sanitixedTx: Transaction.LcdTransaction = JSON.parse(stringTx.replace(/\\\\\\\\u0000|\\\\u0000|\\u0000/g, ''))
-
   const txEntity = new TxEntity()
   txEntity.chainId = block.chainId
   txEntity.hash = tx.txhash.toUpperCase()
-  txEntity.data = sanitixedTx
+  txEntity.data = await sanitizeTx(tx)
   txEntity.timestamp = new Date(tx.timestamp)
   txEntity.block = block
   return txEntity
+}
+
+//Recursively iterating thru the keys of the tx object to find unicode characters that would otherwise mess up db update.
+//If unicode is found in the string, then the value is base64 encoded.
+//Recursion is not implemented well in js, so in case of deeply nested objects, this might fail with RangeError: Maximum call stack size exceeded
+//Tx objects are hopefully not that deep, but just in case they are https://replit.com/@mkotsollaris/javascript-iterate-for-loop?v=1#index.js or something along those lines.
+//Going with simple recursion due time constaints.
+
+async function sanitizeTx(tx: Transaction.LcdTransaction): Promise<Transaction.LcdTransaction> {
+  function hasUnicode(s) {
+    // eslint-disable-next-line no-control-regex
+    return /[^\u0000-\u007f]/.test(s)
+  }
+
+  const iterateTx = (obj) => {
+    Object.keys(obj).forEach((key) => {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        iterateTx(obj[key])
+      } else {
+        if (hasUnicode(obj[key])) {
+          const b = Buffer.from(obj[key])
+          obj[key] = b.toString('base64')
+        }
+      }
+    })
+  }
+  iterateTx(tx)
+  return tx
 }
 
 async function generateTxEntities(txHashes: string[], block: BlockEntity): Promise<TxEntity[]> {
