@@ -4,12 +4,9 @@ import config from 'config'
 import DashboardController from './DashboardController'
 import BankController from './BankController'
 import TransactionController from './TransactionController'
+import { collectorLogger as logger } from 'lib/logger'
 
-const controllers = [
-  DashboardController,
-  BankController,
-  TransactionController,
-]
+const controllers = [DashboardController, BankController, TransactionController]
   .map((prototype) => {
     const controller = new prototype()
 
@@ -23,7 +20,7 @@ const controllers = [
       return true
     })
 
-    // controller.routes.forEach((r) => logger.info(`Route: ${r.methods} ${controller.prefix}${r.path}`))
+    controller.routes.forEach((r) => logger.info(`Route: ${r.methods} ${controller.prefix}${r.path}`))
     return controller
   })
   .filter(Boolean) as KoaController[]

@@ -11,16 +11,15 @@ const {
   PRUNING_KEEP_EVERY,
   BANK_WALLETS,
   TOKEN_NETWORK,
-  GENESIS_ACCOUNT_COUNT
+  GENESIS_ACCOUNT_COUNT,
+  CHAIN_ID,
+  INITIAL_HEIGHT
 } = process.env
-
-const CHAIN_ID = process.env.CHAIN_ID || 'pisco-1'
-const INITIAL_HEIGHT = parseInt(process.env.INITIAL_HEIGHT || '1')
 
 const config = {
   ORM: 'default',
-  CHAIN_ID,
-  INITIAL_HEIGHT,
+  CHAIN_ID: CHAIN_ID || 'pisco-1',
+  INITIAL_HEIGHT: parseInt(INITIAL_HEIGHT || '1'),
   SERVER_PORT: SERVER_PORT ? +SERVER_PORT : 3060,
   LCD_URI: LCD_URI || 'https://pisco-lcd.terra.dev',
   FCD_URI: FCD_URI || 'https://pisco-fcd.terra.dev',
