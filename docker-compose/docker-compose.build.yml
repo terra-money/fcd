@@ -4,7 +4,7 @@ services:
    indexer:     
      image: terraclassic.indexer
      build: 
-      context: .
+      context: ../
       dockerfile: Dockerfile
       labels:
        - "terraclassic.indexer.description=Contains everything needed to run the FCD application"
