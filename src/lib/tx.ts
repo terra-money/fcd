@@ -6,8 +6,6 @@ import { Tx as Tx_pb } from '@terra-money/terra.proto/cosmos/tx/v1beta1/tx'
 
 const tx_pb_actual = config.CHAIN_ID === 'columbus-5' ? Tx_pb_legacy : Tx_pb
 
-console.log(tx_pb_actual === Tx_pb_legacy)
-
 export function isSuccessfulTx(tx: Transaction.LcdTransaction) {
   return tx.code ? false : true
 }

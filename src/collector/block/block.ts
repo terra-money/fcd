@@ -1,6 +1,6 @@
 import * as sentry from '@sentry/node'
 import { getMinutes } from 'date-fns'
-import { getRepository, getManager, DeepPartial, EntityManager } from 'typeorm'
+import { getRepository, getManager, DeepPartial, EntityManager, QueryFailedError } from 'typeorm'
 import * as Bluebird from 'bluebird'
 import { bech32 } from 'bech32'
 
@@ -17,6 +17,7 @@ import { collectTxs } from './tx'
 import { collectReward } from './reward'
 import { collectNetwork } from './network'
 import { collectGeneral } from './general'
+import { number } from 'joi'
 
 const validatorCache = new Map()
 
@@ -142,6 +143,18 @@ export async function saveBlockInformation(
 
   const result: BlockEntity | undefined = await getManager()
     .transaction(async (mgr: EntityManager) => {
+      const latestBlock: Array<BlockEntity> = await mgr
+        .getRepository(BlockEntity)
+        .query(`SELECT * FROM block WHERE chain_id='${lcdBlock.block.header.chain_id}' ORDER BY height DESC LIMIT 1`)
+
+      if (Number(height) <= latestBlock[0].height) {
+        // When the indexer reach the end of the chain it will start from block one
+        // trying to store the data in the DB. Then it will fail to store the data
+        // because the unique constrain "index_with_chainid_and_height" then we return
+        // a new BlockEntity to increase the counter of the block and keep indexing new blocks.
+        return new BlockEntity()
+      }
+
       // Save block rewards
       const newBlockReward = await mgr.getRepository(BlockRewardEntity).save(await getBlockReward(height))
       // Save block entity
@@ -173,6 +186,7 @@ export async function saveBlockInformation(
     })
     .catch((err) => {
       logger.error(err)
+
       if (
         err instanceof Error &&
         typeof err.message === 'string' &&

@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  fcd_db:
+    container_name: fcd_db
+    image: postgres:15.1-alpine3.17
+    shm_size: 1g
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=terra_fcd
+      - POSTGRES_USER=terra
+      - POSTGRES_PASSWORD=terra
+    ports:
+      - 5432:5432
+    volumes:
+      - fcd_db:/var/lib/postgresql/data
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    depends_on:
+      - fcd_db
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: core@terra.money
+      PGADMIN_DEFAULT_PASSWORD: defaultpassword
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+volumes:
+  fcd_db:
+  pgadmin:

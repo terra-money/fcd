@@ -18,12 +18,22 @@ const {
 
 const config = {
   ORM: 'default',
-  CHAIN_ID: INDEXER_CHAIN_ID || 'columbus-5',
-  INITIAL_HEIGHT: INDEXER_INITIAL_HEIGHT ? parseInt(INDEXER_INITIAL_HEIGHT) : 4724001,
+  CHAIN_ID: INDEXER_CHAIN_ID || 'pisco-1',
+  INITIAL_HEIGHT: INDEXER_INITIAL_HEIGHT
+    ? parseInt(INDEXER_INITIAL_HEIGHT)
+    : INDEXER_CHAIN_ID !== 'columbus-5'
+    ? 1
+    : 4724001,
   SERVER_PORT: INDEXER_SERVER_PORT ? parseInt(INDEXER_SERVER_PORT) : 3060,
-  LCD_URI: INDEXER_LCD_URI || 'https://columbus-lcd.terra.dev',
-  FCD_URI: INDEXER_FCD_URI || 'https://columbus-fcd.terra.dev',
-  RPC_URI: INDEXER_RPC_URI || 'http://lcd.terrac.dev:26657',
+  LCD_URI:
+    INDEXER_LCD_URI || INDEXER_CHAIN_ID !== 'columbus-5'
+      ? 'https://pisco-lcd.terra.dev'
+      : 'https://columbus-lcd.terra.dev',
+  FCD_URI:
+    INDEXER_FCD_URI || INDEXER_CHAIN_ID !== 'columbus-5'
+      ? 'https://pisco-fcd.terra.dev'
+      : 'https://columbus-fcd.terra.dev',
+  RPC_URI: INDEXER_RPC_URI || 'http://localhost:26657',
   BANK_WALLETS: INDEXER_BANK_WALLETS ? (JSON.parse(INDEXER_BANK_WALLETS) as string[]) : [],
   TOKEN_NETWORK: INDEXER_TOKEN_NETWORK,
   SENTRY_DSN: INDEXER_SENTRY_DSN,
