@@ -1,6 +1,10 @@
+import config from '../config'
 import * as crypto from 'crypto'
 import { Tx } from '@terra-money/terra.js'
+import { Tx as Tx_pb_legacy } from '@terra-money/terra.proto.legacy/cosmos/tx/v1beta1/tx'
 import { Tx as Tx_pb } from '@terra-money/terra.proto/cosmos/tx/v1beta1/tx'
+
+const tx_pb_actual = config.CHAIN_ID === 'columbus-5' ? Tx_pb_legacy : Tx_pb
 
 export function isSuccessfulTx(tx: Transaction.LcdTransaction) {
   return tx.code ? false : true
@@ -24,5 +28,5 @@ export function getTxHashesFromBlock(lcdBlock: LcdBlock): string[] {
 }
 
 export function decodeTx(txBytes: string) {
-  return Tx.fromProto(Tx_pb.decode(Buffer.from(txBytes, 'base64')))
+  return Tx.fromProto(tx_pb_actual.decode(Buffer.from(txBytes, 'base64')))
 }

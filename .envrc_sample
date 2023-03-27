@@ -1,7 +1,7 @@
 # There are many ways to manage TypeORM configurations.
 # Reference: https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
 export TYPEORM_CONNECTION=postgres
-export TYPEORM_HOST=localhost
+export TYPEORM_HOST=database
 export TYPEORM_USERNAME=terra
 export TYPEORM_PASSWORD=terra
 export TYPEORM_DATABASE=terra_fcd
@@ -11,10 +11,10 @@ export TYPEORM_LOGGING=false
 export TYPEORM_ENTITIES=src/orm/*Entity.ts
 export TYPEORM_MIGRATIONS=src/orm/migration/*.ts
 
-export SERVER_PORT=3060
-export CHAIN_ID=tequila-0004
-export LCD_URI=https://tequila-lcd.terra.dev
-export FCD_URI=https://tequila-fcd.terra.dev
-export RPC_URI=
-export SENTRY_DSN=
-#export USE_LOG_FILE=true
+export INDEXER_SERVER_PORT=3060
+export INDEXER_CHAIN_ID=columbus-5
+export INDEXER_LCD_URI=https://columbus-lcd.terra.dev
+export INDEXER_FCD_URI=https://columbus-fcd.terra.dev
+export INDEXER_RPC_URI=http://public-node.terra.dev:26657
+export INDEXER_SENTRY_DSN=
+#export INDEXER_USE_LOG_FILE=true

@@ -1,0 +1,25 @@
+ARG base_image=terraclassic.indexer
+ARG version=latest
+
+FROM ${base_image}:${version}
+
+ARG indexer_chain_id=columbus-5
+ARG indexer_initial_height=4724001
+ARG indexer_lcd_uri=https://columbus-lcd.terra.dev
+ARG indexer_rpc_uri=http://public-node.terra.dev:26657
+ARG indexer_use_log_file=false
+ARG indexer_server_port=3060
+ARG indexer_disable_api=false
+ARG indexer_token_network=mainnet
+
+ENV INDEXER_CHAIN_ID ${indexer_chain_id}
+ENV INDEXER_INITIAL_HEIGHT ${indexer_initial_height}
+ENV INDEXER_LCD_URI ${indexer_lcd_uri}
+ENV INDEXER_FCD_URI ${indexer_fcd_uri}
+ENV INDEXER_RPC_URI ${indexer_rpc_uri}
+ENV INDEXER_USE_LOG_FILE ${indexer_use_log_file}
+ENV INDEXER_SERVER_PORT ${indexer_server_port}
+ENV INDEXER_DISABLE_API ${indexer_disable_api}
+ENV INDEXER_TOKEN_NETWORK ${indexer_token_network}
+
+CMD [ "dev" ]

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+   database:     
+     container_name: database
+     image: postgres:latest
+     ports:
+       - "5432:5432"
+     environment:
+       - "POSTGRES_USER=terra"
+       - "POSTGRES_PASSWORD=terra"
+       - "POSTGRES_DB=terra_fcd"
+     networks:
+       - terra-classic
+   indexer-collector:
+     #Enable this image if you want to use the docker-compose CLI to build from the local typescript source
+     image: terraclassic.indexer-collector
+     #Enable this image if you want to target columbus-5
+     #image: terrarebels/terraclassic.indexer-collector:latest-columbus-5
+     #Enable this image if you want to target rebel-1
+     #image: terrarebels/terraclassic.indexer-collector:latest-rebel-1
+     command: coldev
+     environment:
+       - "INDEXER_CHAIN_ID=columbus-5"
+       - "INDEXER_INITIAL_HEIGHT=4724001"
+       - "INDEXER_LCD_URI=https://columbus-lcd.terra.dev"
+       - "INDEXER_RPC_URI=http://public-node.terra.dev:26657"
+       - "INDEXER_USE_LOG_FILE=false"
+     restart: always
+     networks:
+       - terra-classic
+   indexer-api:
+     #Enable this image if you want to use the docker-compose CLI to build from the local typescript source
+     image: terraclassic.indexer-api
+     #Enable this image if you want to target columbus-5
+     #image: terrarebels/terraclassic.indexer-api:latest-columbus-5
+     #Enable this image if you want to target rebel-1
+     #image: terrarebels/terraclassic.indexer-api:latest-rebel-1
+     command: dev
+     environment:
+       - "INDEXER_CHAIN_ID=columbus-5"
+       - "INDEXER_INITIAL_HEIGHT=4724001"
+       - "INDEXER_LCD_URI=https://columbus-lcd.terra.dev"
+       - "INDEXER_RPC_URI=http://public-node.terra.dev:26657"
+       - "INDEXER_USE_LOG_FILE=false"
+       - "INDEXER_SERVER_PORT=3060"
+       - "INDEXER_DISABLE_API=false"
+       - "INDEXER_TOKEN_NETWORK=mainnet"
+     restart: always
+     ports:     
+       - "3060:3060"
+     networks:
+       - terra-classic
+
+networks:
+  terra-classic:
+    driver: bridge
