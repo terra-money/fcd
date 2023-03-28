@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - test
+      - classic
   push:
     branches:
       - main
       - test
+      - classic
     tags:
       - 'v*'
 
@@ -72,14 +74,15 @@ jobs:
             type=edge,branch=test
             type=semver,pattern={{tag}}
             type=semver,pattern={{version}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=classic,enable=${{ github.ref == format('refs/heads/{0}', 'classic') }}
 
       - name: Build docker image
         uses: docker/build-push-action@v3
         with:
           push: ${{ github.event_name != 'pull_request' }}
           file: Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
           labels: ${{ env.DOCKER_METADATA_OUTPUT_LABELS }}
 
