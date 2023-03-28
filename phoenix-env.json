@@ -1,0 +1,58 @@
+ [
+ {
+                    "name": "INITIAL_HEIGHT",
+                    "value": "1"
+                },
+                {
+                    "name": "LCD_URI",
+                    "value": "http://internal-phoenix-1-lcd-internal-1652996208.us-east-1.elb.amazonaws.com"
+                },
+                {
+                    "name": "TZ",
+                    "value": "GMT"
+                },
+                {
+                    "name": "TYPEORM_USERNAME",
+                    "value": "terra"
+                },
+                {
+                    "name": "TYPEORM_CONNECTION",
+                    "value": "postgres"
+                },
+                {
+                    "name": "FCD_URI",
+                    "value": "http://internal-phoenix-1-fcd-internal-856282586.us-east-1.elb.amazonaws.com"
+                },
+                {
+                    "name": "TYPEORM_DATABASE",
+                    "value": "fcd"
+                },
+                {
+                    "name": "RPC_URI",
+                    "value": "http://internal-phoenix-1-rpc-673288182.us-east-1.elb.amazonaws.com"
+                },
+                {
+                    "name": "TYPEORM_LOGGING",
+                    "value": "false"
+                },
+                {
+                    "name": "TYPEORM_MIGRATE",
+                    "value": "false"
+                },
+                {
+                    "name": "TYPEORM_HOST",
+                    "value": "phoenix-1-general-db.cluster-c1ad4bup5iij.us-east-1.rds.amazonaws.com"
+                },
+                {
+                    "name": "CHAIN_ID",
+                    "value": "phoenix-1"
+                },
+                {
+                    "name": "GENESIS_ACCOUNT_COUNT",
+                    "value": "487846"
+                },
+                {
+                    "name": "TYPEORM_SYNCHRONIZE",
+                    "value": "false"
+                }
+		]
