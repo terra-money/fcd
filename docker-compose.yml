@@ -1,0 +1,89 @@
+version: "3.8"
+
+x-fcd-env: &fcd-env
+  - CHAIN_ID=localterra
+  - LCD_URI=http://terrad:1317
+  - RPC_URI=http://terrad:26657
+  - USE_LOG_FILE=true
+  - TYPEORM_CONNECTION=postgres
+  - TYPEORM_HOST=postgres
+  - TYPEORM_USERNAME=terra
+  - TYPEORM_PASSWORD=abc123
+  - TYPEORM_DATABASE=fcd
+  - TYPEORM_SYNCHRONIZE=true
+  - TYPEORM_LOGGING=false
+  - TYPEORM_ENTITIES=src/orm/*Entity.ts
+  - LEGACY_NETWORK=false
+
+services:
+  fcd-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TERRA_VERSION: ${TERRA_VERSION}
+    image: ghcr.io/terra-money/fcd:${TERRA_VERSION}
+    container_name: localterra-fcd-collector
+    hostname: fcd-collector
+    command: collector
+    restart: unless-stopped
+    environment: *fcd-env
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - localterra
+
+  fcd-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TERRA_VERSION: ${TERRA_VERSION}
+    image: ghcr.io/terra-money/fcd:${TERRA_VERSION}
+    container_name: localterra-fcd-api
+    hostname: fcd-api
+    command: start
+    environment: *fcd-env
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - localterra
+    ports:
+      - 3060:3060
+
+  terrad:
+    image: ghcr.io/terra-money/localterra:${TERRA_VERSION}
+    container_name: localterra-terrad
+    hostname: terrad
+    pull_policy: always
+    volumes:
+      - localterra:/app
+    networks:
+      - localterra
+    ports:
+      - "1317:1317"
+      - "9090:9090"
+      - "9091:9091"
+      - "26657:26657"
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: localterra-postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: terra
+      POSTGRES_PASSWORD: abc123
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - localterra
+    ports:
+      - 5433:5432
+
+volumes:
+  localterra:
+  pgdata:
+
+networks:
+  localterra:
