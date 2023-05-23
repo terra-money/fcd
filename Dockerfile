@@ -7,6 +7,8 @@ RUN npm ci
 
 FROM node:lts-alpine
 
+RUN apk add --no-cache tzdata
+
 WORKDIR /app
 
 COPY --from=builder /app/entrypoint.sh /app/package.json /app/package-lock.json /app/tsconfig.json ./
