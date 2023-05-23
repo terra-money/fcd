@@ -1,4 +1,4 @@
-FROM node:lts-alpine as builder
+FROM node:lts as builder
 
 WORKDIR /app
 
@@ -6,8 +6,6 @@ COPY . .
 RUN npm ci
 
 FROM node:lts-alpine
-
-RUN apk add --no-cache tzdata
 
 WORKDIR /app
 
