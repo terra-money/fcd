@@ -49,7 +49,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/terra-money/fcd:${TERRA_VERSION}
+    image: ghcr.io/terra-money/fcd:${FCD_VERSION}
     hostname: fcd_collector
     command: collector
     restart: unless-stopped
@@ -61,7 +61,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/terra-money/fcd:${TERRA_VERSION}
+    image: ghcr.io/terra-money/fcd:${FCD_VERSION}
     hostname: fcd_api
     command: start
     environment: *fcd-env
