@@ -3,8 +3,8 @@
 export TYPEORM_CONNECTION=postgres
 export TYPEORM_HOST=database
 export TYPEORM_USERNAME=terra
-export TYPEORM_PASSWORD=terra
-export TYPEORM_DATABASE=terra_fcd
+export TYPEORM_PASSWORD=abc123
+export TYPEORM_DATABASE=fcd
 export TYPEORM_PORT=5432 
 export TYPEORM_SYNCHRONIZE=false
 export TYPEORM_LOGGING=false
