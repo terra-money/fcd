@@ -39,7 +39,7 @@ FCD requires PostgreSQL as a backend database and [TypeORM](https://github.com/t
 #### Create a new database for FCD
 
 ```psql
-postgres=> CREATE DATABASE terra_fcd OWNER terra;
+postgres=> CREATE DATABASE fcd OWNER terra;
 ```
 
 #### Synchronize Database Scheme

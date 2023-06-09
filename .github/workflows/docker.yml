@@ -1,15 +1,13 @@
-name: docker-build
+name: Docker Build
 
 on:
   pull_request:
     branches:
       - main
-      - test
       - classic
   push:
     branches:
       - main
-      - test
       - classic
     tags:
       - 'v*'
@@ -66,9 +64,9 @@ jobs:
 
           github-token: ${{ secrets.GITHUB_TOKEN }}
           images: |
-            ${{ steps.login-ecr.outputs.registry }}/fcd
+            ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}
             ghcr.io/${{ github.repository }}
-            terraformlabs/fcd
+            terraformlabs/${{ github.event.repository.name }}
           tags: |
             type=sha
             type=edge,branch=test
