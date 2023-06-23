@@ -45,6 +45,7 @@ const init = async () => {
   await collectBlock()
   await createJobs()
   await startWatcher()
+  console.log('Collector started')
 }
 
 init().catch(logger.error)
