@@ -51,7 +51,12 @@ async function generateTxEntities(txHashes: string[], block: BlockEntity): Promi
   // TODO: do this without using Set
   const txHashesUnique = [...new Set(txHashes)]
 
-  return Bluebird.map(txHashesUnique, (txHash) => lcd.getTx(txHash).then((tx) => generateTxEntity(tx, block)))
+  // Filter out specific string value
+  const filteredTxHashes = txHashesUnique.filter(
+    (txHash) => txHash !== 'BDC478F0E2D35AA8C4452A765CA4DB4031295DD3965F24FAB09821C3AFA4677B'
+  )
+
+  return Bluebird.map(filteredTxHashes, (txHash) => lcd.getTx(txHash).then((tx) => generateTxEntity(tx, block)))
 }
 
 export async function collectTxs(mgr: EntityManager, txHashes: string[], block: BlockEntity): Promise<TxEntity[]> {
