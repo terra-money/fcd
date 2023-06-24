@@ -52,9 +52,12 @@ async function generateTxEntities(txHashes: string[], block: BlockEntity): Promi
   const txHashesUnique = [...new Set(txHashes)]
 
   // Filter out specific string value
-  const filteredTxHashes = txHashesUnique.filter(
-    (txHash) => txHash !== 'BDC478F0E2D35AA8C4452A765CA4DB4031295DD3965F24FAB09821C3AFA4677B'
-  )
+  let badTxs: string[] = []
+  if (process.env.BAD_TXS) {
+    badTxs = process.env.BAD_TXS.split(',')
+  }
+
+  const filteredTxHashes = txHashesUnique.filter((txHash) => !badTxs.includes(txHash))
 
   return Bluebird.map(filteredTxHashes, (txHash) => lcd.getTx(txHash).then((tx) => generateTxEntity(tx, block)))
 }
