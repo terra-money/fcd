@@ -51,12 +51,21 @@ async function generateTxEntities(txHashes: string[], block: BlockEntity): Promi
   // TODO: do this without using Set
   const txHashesUnique = [...new Set(txHashes)]
 
-  return Bluebird.map(txHashesUnique, (txHash) => lcd.getTx(txHash).then((tx) => generateTxEntity(tx, block)))
+  const resTxHash = await Bluebird.map(txHashesUnique, async (txHash) => {
+    const tx = await lcd.getTx(txHash)
+
+    if (!tx) {
+      return undefined
+    }
+
+    return generateTxEntity(tx, block)
+  })
+
+  return resTxHash.filter((v) => v !== undefined) as TxEntity[]
 }
 
 export async function collectTxs(mgr: EntityManager, txHashes: string[], block: BlockEntity): Promise<TxEntity[]> {
   const txEntities = await generateTxEntities(txHashes, block)
-
   // Skip transactions that have already been successful
   const existingTxs = await mgr.find(TxEntity, { where: { hash: In(txEntities.map((t) => t.hash)) } })
 

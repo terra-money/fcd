@@ -78,14 +78,21 @@ function calculateHeightParam(strHeight?: string): string | undefined {
 ///////////////////////////////////////////////
 // Transactions
 ///////////////////////////////////////////////
-export async function getTx(hash: string): Promise<Transaction.LcdTransaction> {
-  const res = await get(`/cosmos/tx/v1beta1/txs/${hash}`)
+// If a transactuon fails will return an object as undefined
+// and it will log the error
+export async function getTx(hash: string): Promise<Transaction.LcdTransaction | undefined> {
+  try {
+    const res = await get(`/cosmos/tx/v1beta1/txs/${hash}`)
 
-  if (!res || !res.tx_response) {
-    throw new APIError(ErrorTypes.NOT_FOUND_ERROR, '', `transaction not found on node (hash: ${hash})`)
+    if (!res || !res.tx_response) {
+      throw new APIError(ErrorTypes.NOT_FOUND_ERROR, '', `transaction not found on node (hash: ${hash})`)
+    }
+
+    return res.tx_response
+  } catch (err) {
+    console.log(`Something went wrong querying the transactions from the LCD. Error: ${err}`)
+    return undefined
   }
-
-  return res.tx_response
 }
 
 ///////////////////////////////////////////////
