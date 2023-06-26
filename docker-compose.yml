@@ -17,7 +17,7 @@ x-fcd-env: &fcd-env
 
 services:
   terrad:
-    image: ghcr.io/terra-money/localterra:2.3.4
+    image: ghcr.io/terra-money/localterra:${TERRA_VERSION}
     hostname: terrad
     volumes:
       - terra:/app
@@ -49,7 +49,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/terra-money/fcd:2.3.4
+    image: ghcr.io/terra-money/fcd:${TERRA_VERSION}
     hostname: fcd_collector
     command: collector
     restart: unless-stopped
@@ -61,7 +61,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/terra-money/fcd:2.3.4
+    image: ghcr.io/terra-money/fcd:${TERRA_VERSION}
     hostname: fcd_api
     command: start
     environment: *fcd-env
