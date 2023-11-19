@@ -2,7 +2,7 @@ version: '3.8'
 
 x-fcd-env: &fcd-env
   - CHAIN_ID=localterra
-  - LCD_URI=http://terrad:1317
+  - LCD_URI=http://terrad:8080
   - RPC_URI=http://terrad:26657
   - USE_LOG_FILE=false
   - TYPEORM_CONNECTION=postgres
