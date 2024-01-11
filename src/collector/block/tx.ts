@@ -25,9 +25,9 @@ export async function generateTxEntity(tx: Transaction.LcdTransaction, block: Bl
 //Going with simple recursion due time constaints.
 
 async function sanitizeTx(tx: Transaction.LcdTransaction): Promise<Transaction.LcdTransaction> {
-  function hasUnicode(s) {
+  function hasUnicodeOrControl(s) {
     // eslint-disable-next-line no-control-regex
-    return /[^\u0000-\u007f]/.test(s)
+    return /[^\u0020-\u007f]/.test(s)
   }
 
   const iterateTx = (obj) => {
@@ -35,7 +35,7 @@ async function sanitizeTx(tx: Transaction.LcdTransaction): Promise<Transaction.L
       if (typeof obj[key] === 'object' && obj[key] !== null) {
         iterateTx(obj[key])
       } else {
-        if (hasUnicode(obj[key])) {
+        if (hasUnicodeOrControl(obj[key])) {
           const b = Buffer.from(obj[key])
           obj[key] = b.toString('base64')
         }
